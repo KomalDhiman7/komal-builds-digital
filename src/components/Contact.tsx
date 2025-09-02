@@ -24,30 +24,36 @@ const Contact = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  e.preventDefault();
+  setIsLoading(true);
 
-    try {
-      // For now, just show a success message
-      // Once Supabase is connected, we can implement actual form submission
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      
+  try {
+    const response = await fetch("https://formspree.io/f/xwpoywre", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
       toast({
         title: "Message Sent Successfully!",
         description: "Thank you for reaching out. I'll get back to you soon!",
       });
-
       setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+    } else {
+      throw new Error("Formspree error");
     }
-  };
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: "Failed to send message. Please try again.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const contactInfo = [
     {
@@ -148,77 +154,80 @@ const Contact = () => {
               <CardTitle className="text-2xl">Send a Message</CardTitle>
             </CardHeader>
             <CardContent>
+            
+
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Your Name</label>
-                    <Input
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Enter Your Name"
-                      required
-                      className="bg-background/50"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Email Address</label>
-                    <Input
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="name@example.com"
-                      required
-                      className="bg-background/50"
-                    />
-                  </div>
-                </div>
+  <div className="grid md:grid-cols-2 gap-4">
+    <div>
+      <label className="text-sm font-medium mb-2 block">Your Name</label>
+      <Input
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        placeholder="Enter Your Name"
+        required
+        className="bg-background/50"
+      />
+    </div>
+    <div>
+      <label className="text-sm font-medium mb-2 block">Email Address</label>
+      <Input
+        name="email"
+        type="email"
+        value={formData.email}
+        onChange={handleChange}
+        placeholder="name@example.com"
+        required
+        className="bg-background/50"
+      />
+    </div>
+  </div>
 
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Subject</label>
-                  <Input
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    placeholder="Let's work together"
-                    required
-                    className="bg-background/50"
-                  />
-                </div>
+  <div>
+    <label className="text-sm font-medium mb-2 block">Subject</label>
+    <Input
+      name="subject"
+      value={formData.subject}
+      onChange={handleChange}
+      placeholder="Let's work together"
+      required
+      className="bg-background/50"
+    />
+  </div>
 
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Message</label>
-                  <Textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="Tell me about your project or opportunity..."
-                    rows={6}
-                    required
-                    className="bg-background/50 resize-none"
-                  />
-                </div>
+  <div>
+    <label className="text-sm font-medium mb-2 block">Message</label>
+    <Textarea
+      name="message"
+      value={formData.message}
+      onChange={handleChange}
+      placeholder="Tell me about your project or opportunity..."
+      rows={6}
+      required
+      className="bg-background/50 resize-none"
+    />
+  </div>
 
-                <Button 
-                  type="submit" 
-                  size="lg" 
-                  disabled={isLoading}
-                  className="w-full bg-gradient-primary hover:scale-105 transition-all duration-300"
-                >
-                  {isLoading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-background border-t-transparent mr-2" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-4 w-4 mr-2" />
-                      Send Message
-                    </>
-                  )}
-                </Button>
-              </form>
+  <Button 
+    type="submit" 
+    size="lg" 
+    disabled={isLoading}
+    className="w-full bg-gradient-primary hover:scale-105 transition-all duration-300"
+  >
+    {isLoading ? (
+      <>
+        <div className="animate-spin rounded-full h-4 w-4 border-2 border-background border-t-transparent mr-2" />
+        Sending...
+      </>
+    ) : (
+      <>
+        <Send className="h-4 w-4 mr-2" />
+        Send Message
+      </>
+    )}
+  </Button>
+</form>
+
 
               <div className="mt-6 text-center text-sm text-muted-foreground">
                 <p>Prefer direct contact? Email me at</p>

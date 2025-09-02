@@ -59,7 +59,7 @@ const Index = () => {
             © 2024 Komal Dhiman. Built with React, TypeScript, and Tailwind CSS.
           </p>
           <p className="text-sm text-muted-foreground mt-2">
-            Designed and developed with ❤️ for creating meaningful digital experiences.
+            
           </p>
         </div>
       </footer>
